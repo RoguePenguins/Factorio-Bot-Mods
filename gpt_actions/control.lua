@@ -31,7 +31,7 @@ function rcon_set_mining_target(player_id, name, position)
 	elseif name ~= nil and position ~= nil then
 		ent = player.surface.find_entity(name, position)
 		if ent and ent.minable then
-			global.p[player_id].mining = { entity = ent = prototype = ent.prototype }
+			global.p[player_id].mining = { entity = ent, prototype = ent.prototype }
 		
 		else
 			print("no entity to mine")
