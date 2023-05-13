@@ -38,6 +38,9 @@ function rcon_set_mining_target(player_id, name, position)
 			global.p[player_id].mining = nil
 		end
 	end
+
+
+
 end
 
 function place_entity(entity_name, position, direction)
@@ -83,7 +86,7 @@ function rcon_insert_to_inventory(player_id, entity_name, entity_pos, inventory_
 	local available_count = player.get_item_count(items)
 
 	if available_count < count then
-		complain("cannot insert "..count.."x "..items.name..", because player #"..player_id.." only has "..available_count..". clamping...")
+		game.print("Player doesn't have enough items")
 		count = available_count
 	end
 
@@ -257,7 +260,6 @@ function on_tick(event)
 					-- the entity to be mined has been deleted, but p[idx].mining is still true.
 					-- this means that on_mined_entity() has *not* been called, indicating that something
 					-- else has "stolen" what we actually wanted to mine :(
-					complain("failed to mine " .. global.p[idx].mining.prototype.name)
 					global.p[idx].mining = nil
 				end
 			end
