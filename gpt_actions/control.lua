@@ -22,6 +22,12 @@ function rcon_set_waypoints(player_id, waypoints) -- e.g. waypoints= { {0,0}, {3
 	global.p[player_id].walking = {idx=1, waypoints=tmp}
 end
 
+
+function rcon_cancel_waypoints(player_id)
+	global.p[player_id].walking = nil
+end
+
+
 function rcon_set_mining_target(player_id, name, position)
 	local player = game.players[player_id]
 	local ent = nil
@@ -274,6 +280,7 @@ script.on_event(defines.events.on_tick, on_tick)
 
 remote.add_interface("actions", {
 	set_waypoints=rcon_set_waypoints,
+	cancel_waypoints=rcon_cancel_waypoints,
 	set_mining_target=rcon_set_mining_target,
 	place_entity=place_entity,
 	start_crafting=rcon_start_crafting,

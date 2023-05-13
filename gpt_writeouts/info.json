@@ -1,5 +1,5 @@
 {
-    "name": "gpt_writeouts",
+    "name": "gpt-writeouts",
     "version": "0.1.0",
     "title": "Writeout game data to files",
     "author": "Penguin",

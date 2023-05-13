@@ -1,5 +1,5 @@
 {
-    "name": "gpt_actions",
+    "name": "gpt-actions",
     "version": "0.1.0",
     "title": "Interface to control player actions",
     "author": "Penguin",
