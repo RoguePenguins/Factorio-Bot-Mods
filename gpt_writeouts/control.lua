@@ -138,7 +138,6 @@ end
 function writeout_initial_stuff()
 	writeout_entity_prototypes()
 	writeout_recipes()
-	game.write_file("inventory.txt", player_total_inventory('1')) 
 
 end
 
@@ -205,11 +204,10 @@ function writeout_entity_prototypes()
 end
 
 function writeout_recipes()
+	-- FIXME: this assumes that there is only one player force
 	header = "recipes: "
 	lines = {}
-	local recipes = game.get_filtered_recipe_prototypes({})
-
-	for rec in recipes do
+	for name, rec in pairs(game.forces["player"].recipes) do
 		ingredients = {}
 		products = {}
 		for _,ing in ipairs(rec.ingredients) do
@@ -222,7 +220,7 @@ function writeout_recipes()
 
 		table.insert(lines, rec.name.." "..(rec.enabled and "1" or "0").." "..rec.energy.." "..table.concat(ingredients,",").." "..table.concat(products,","))
 	end
-	write_init_file(0,header..table.concat(lines, "$").."\n")
+	write_file(0,header..table.concat(lines, "$").."\n")
 end
 
 function writeout_tiles(surface, area) -- SLOW! beastie can do ~2.8 per tick
@@ -237,8 +235,12 @@ function writeout_tiles(surface, area) -- SLOW! beastie can do ~2.8 per tick
 			table.insert(line, tile.collides_with('player-layer') and "1" or "0")
 		end
 	end
+	
+	local json_data = game.table_to_json(line)
 
-	write_init_file(header..table.concat(line, ",").."\n")
+    -- Write the JSON data to a file
+    local filename = "tiles.json"
+    game.write_file(filename, json_data, false)
 end
 
 function writeout_resources(surface, area) -- quite fast. beastie can do > 40, up to 75 per tick
@@ -461,10 +463,6 @@ function writeout_chunk()
 
 	area={left_top={x=chunk_x, y=chunk_y}, right_bottom={x=chunk_xend, y=chunk_yend}}
 
-	if chunk_x < global.map_area.x1 then global.map_area.x1 = chunk_x end
-	if chunk_y < global.map_area.y1 then global.map_area.y1 = chunk_y end
-	if chunk_xend > global.map_area.x2 then global.map_area.x2 = chunk_xend end
-	if chunk_yend > global.map_area.y2 then global.map_area.y2 = chunk_yend end
 	
 	writeout_resources(surface, area)
 	writeout_objects(game.tick, surface, area)
@@ -474,7 +472,7 @@ end
 
 -- Define a remote interface to expose the functions
 remote.add_interface("writeouts", {
-	write_tiles = writeout_tiles,
+	writeout_tiles = writeout_tiles,
 	writeout_initial_stuff = writeout_initial_stuff,
 	writeout_chunk = writeout_chunk,
 	writeout_inventory = WriteOutInventory,
