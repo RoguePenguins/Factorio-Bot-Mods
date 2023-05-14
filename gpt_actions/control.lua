@@ -14,6 +14,7 @@ function on_init()
 	global.n_clients = 1
 
 end
+
 function rcon_set_waypoints(player_id, waypoints) -- e.g. waypoints= { {0,0}, {3,3}, {42,1337} }
 	tmp = {}
 	for i = 1, #waypoints do
@@ -31,22 +32,23 @@ end
 function rcon_set_mining_target(player_id, name, position)
 	local player = game.players[player_id]
 	local ent = nil
-	if name == "stop" then
-		global.p[player_id].mining = nil
-
-	elseif name ~= nil and position ~= nil then
+	
+	if name ~= nil and position ~= nil then
 		ent = player.surface.find_entity(name, position)
 		if ent and ent.minable then
 			global.p[player_id].mining = { entity = ent, prototype = ent.prototype }
 		
 		else
-			print("no entity to mine")
+			game.player.print("Entity not found or out of range")
 			global.p[player_id].mining = nil
 		end
+	else
+		game.player.print("Name or position undefined")
 	end
+end
 
-
-
+function rcon_stop_mining_target(player_id)
+	global.p[player_id].mining = nil
 end
 
 function place_entity(entity_name, position, direction)
@@ -284,6 +286,7 @@ remote.add_interface("actions", {
 	set_waypoints=rcon_set_waypoints,
 	cancel_waypoints=rcon_cancel_waypoints,
 	set_mining_target=rcon_set_mining_target,
+	stop_mining_target=rcon_stop_mining_target,
 	place_entity=place_entity,
 	start_crafting=rcon_start_crafting,
 	insert_to_inventory=rcon_insert_to_inventory,
