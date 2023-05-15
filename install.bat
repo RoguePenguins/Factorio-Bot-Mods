@@ -2,7 +2,7 @@
 setlocal
 
 REM Set the source and destination paths
-set "source_folder_1=gpt_actions"
+set "source_folder_1=gpt_actions_new"
 set "source_folder_2=gpt_writeouts"
 set "destination_folder=%APPDATA%\Factorio\mods"
 set "version=0.1.0"
